@@ -1,19 +1,27 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity,Image } from "react-native";
+import Logo from '../assets/creorb_logo.png'
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Onboarding({ navigation }) {
   return (
-    <View className="items-center justify-center flex-1 px-6 bg-neutral-900">
-      <Text className="mb-3 text-2xl font-semibold text-white">Welcome to Creorb!</Text>
-      <Text className="mb-10 text-center text-neutral-400">
+    <SafeAreaView className="justify-between flex-1 px-6 py-11 bg-neutral-900">
+    <View className="items-center justify-center flex-1 gap-12 px-6 bg-neutral-900">
+      <Text className="text-2xl font-semibold text-white ">Welcome to Creorb!</Text>
+      <Image source={Logo} className="w-32 h-32" />
+      <Text className="text-xl text-center text-neutral-400">
         This is a moodboard application
       </Text>
-
-      <TouchableOpacity
+ 
+    
+    </View>
+    <View>
+        <TouchableOpacity
         onPress={() => navigation.navigate("Login")}
-        className="px-10 py-3 bg-blue-600 rounded-full"
+        className="px-10 py-5 bg-blue-600 rounded-full"
       >
-        <Text className="font-semibold text-white">Get Started</Text>
+        <Text className="text-xl font-bold text-center text-white">Get Started</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 }
