@@ -2,13 +2,14 @@ import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } fro
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
-import { authService } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import { useMood } from "../context/MoodContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const { loadMoods, clearMoods } = useMood();
 
   const handleLogin = async () => {
@@ -26,7 +27,7 @@ export default function Login({ navigation }) {
       // Clear old moods before login
       clearMoods();
       
-      await authService.login(email, pass);
+      await login(email, pass);
       
       // Load moods for the new user
       await loadMoods();
@@ -36,7 +37,6 @@ export default function Login({ navigation }) {
         text1: "Success",
         text2: "Login successful!",
       });
-      navigation.navigate("MainTabs");
     } catch (error) {
       Toast.show({
         type: "error",

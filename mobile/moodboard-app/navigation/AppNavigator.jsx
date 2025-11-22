@@ -2,12 +2,14 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { ActivityIndicator, View } from "react-native";
 
 import Onboarding from "../screens/Onboarding";
 import Login from "../screens/Login";
 import Home from "../screens/Home";
 import AddMood from "../screens/AddMood";
 import Dashboard from "../screens/Dashboard";
+import { useAuth } from "../context/AuthContext";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -46,13 +48,30 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#181818" }}>
+        <ActivityIndicator size="large" color="#3b82f6" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={Onboarding} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="MainTabs" component={MainTabs} />
+        {isAuthenticated ? (
+          <>
+            <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen name="Home" component={Home} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Onboarding" component={Onboarding} />
+            <Stack.Screen name="Login" component={Login} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

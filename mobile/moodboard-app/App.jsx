@@ -6,16 +6,19 @@ import './global.css';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from 'navigation/AppNavigator';
 import { MoodProvider } from 'context/MoodContext';
+import { AuthProvider } from 'context/AuthContext';
 
 export default function App() {
   return (
     <>
-    <MoodProvider>
-      <SafeAreaProvider>
-      <AppNavigator />
-        <Toast />
-    </SafeAreaProvider>
-    </MoodProvider>
+    <AuthProvider>
+      <MoodProvider>
+        <SafeAreaProvider>
+          <AppNavigator />
+          <Toast />
+        </SafeAreaProvider>
+      </MoodProvider>
+    </AuthProvider>
     </>
   );
 }

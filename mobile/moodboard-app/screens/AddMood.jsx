@@ -1,7 +1,8 @@
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, FlatList } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, FlatList, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMood } from "../context/MoodContext";
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 const EMOJIS = [
@@ -19,6 +20,7 @@ export default function AddMood() {
   const [description, setDescription] = useState("");
 
   const { moods, addMood } = useMood();
+  const navigation = useNavigation();
 
   const handleChoose = () => {
     if (selectedMoodObj) {
@@ -40,6 +42,9 @@ export default function AddMood() {
         setDescription("");
         setSelectedMoodObj(null);
         setStep("select");
+        
+        // Navigate to Dashboard
+        navigation.navigate("Dashboard");
       }
     }
   };
@@ -101,50 +106,54 @@ export default function AddMood() {
   // ---------------------------
   if (step === "describe") {
     return (
-      <SafeAreaView className="flex-1 px-6 bg-neutral-900">
-        <View className="flex-row items-center justify-start gap-5 mb-8">
-          <Image source={require("../assets/creorb_logo.png")} className="w-10 h-10" />
-          <Text className="text-xl font-semibold text-white">Creorb Studio</Text>
-        </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView className="flex-1 px-6 bg-neutral-900">
+          <View className="flex-row items-center justify-start gap-5 mb-8">
+            <Image source={require("../assets/creorb_logo.png")} className="w-10 h-10" />
+            <Text className="text-xl font-semibold text-white">Creorb Studio</Text>
+          </View>
 
-        <View className="items-center justify-center mb-8">
-          <Text className="text-2xl font-semibold text-center text-white">Write the Description</Text>
-          <Text className="mb-6 text-xl text-center text-neutral-400">
-            How did you feel today?
-          </Text>
-
-          {/* FIX: show just the emoji */}
-          {selectedMoodObj?.emoji ? (
-            <Text className="py-2 mb-6 text-6xl text-center">
-              {selectedMoodObj.emoji}
+          <View className="items-center justify-center mb-8">
+            <Text className="text-2xl font-semibold text-center text-white">Write the Description</Text>
+            <Text className="mb-6 text-xl text-center text-neutral-400">
+              How did you feel today?
             </Text>
-          ) : null}
 
-          <TextInput
-            multiline
-            placeholder="Describe your feeling..."
-            placeholderTextColor="#8e8e8e"
-            value={description}
-            onChangeText={setDescription}
-            textAlignVertical="top"
-            className="w-full px-4 py-5 mb-6 text-white h-2/5 bg-neutral-800 rounded-xl"
-          />
-        </View>
+            {/* FIX: show just the emoji */}
+            {selectedMoodObj?.emoji ? (
+              <Text className="py-2 mb-6 text-6xl text-center">
+                {selectedMoodObj.emoji}
+              </Text>
+            ) : null}
 
-        <TouchableOpacity
-          onPress={handleSubmit}
-          className="items-center py-4 mb-4 bg-blue-600 rounded-full"
-        >
-          <Text className="text-lg font-semibold text-white">Submit</Text>
-        </TouchableOpacity>
+            <TextInput
+              multiline
+              placeholder="Describe your feeling..."
+              placeholderTextColor="#8e8e8e"
+              value={description}
+              onChangeText={setDescription}
+              textAlignVertical="top"
+              blurOnSubmit={true}
+              returnKeyType="done"
+              className="w-full px-4 py-5 mb-6 text-white h-2/5 bg-neutral-800 rounded-xl"
+            />
+          </View>
 
-        <TouchableOpacity
-          onPress={() => setStep("select")}
-          className="items-center py-4 rounded-full bg-neutral-700"
-        >
-          <Text className="text-lg font-semibold text-white">Back</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+          <TouchableOpacity
+            onPress={handleSubmit}
+            className="items-center py-4 mb-4 bg-blue-600 rounded-full"
+          >
+            <Text className="text-lg font-semibold text-white">Submit</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setStep("select")}
+            className="items-center py-4 rounded-full bg-neutral-700"
+          >
+            <Text className="text-lg font-semibold text-white">Back</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 

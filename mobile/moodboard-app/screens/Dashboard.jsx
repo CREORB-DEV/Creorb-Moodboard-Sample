@@ -1,14 +1,13 @@
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useMood } from "../context/MoodContext";
-import { authService } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 
 
 export default function Dashboard() {
   const { moods, deleteMood, clearMoods } = useMood();
-  const navigation = useNavigation();
+  const { logout } = useAuth();
 
   const handleDelete = (moodId) => {
     Alert.alert(
@@ -31,12 +30,8 @@ export default function Dashboard() {
           text: "Logout", 
           style: "destructive", 
           onPress: async () => {
-            await authService.logout();
             clearMoods();
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            });
+            await logout();
           }
         },
       ]
