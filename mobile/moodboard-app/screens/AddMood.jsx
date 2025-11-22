@@ -26,19 +26,21 @@ export default function AddMood() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (description.trim()) {
-      addMood(selectedMoodObj?.emoji, selectedMoodObj?.label, description)
+      const success = await addMood(selectedMoodObj?.emoji, selectedMoodObj?.label, description);
 
-      Toast.show({
-        type: "success",
-        text1: "Mood added!",
-        text2: "Your mood has been saved successfully 👌",
-      });
+      if (success) {
+        Toast.show({
+          type: "success",
+          text1: "Mood added!",
+          text2: "Your mood has been saved successfully 👌",
+        });
 
-      setDescription("");
-      setSelectedMoodObj(null);
-      setStep("select");
+        setDescription("");
+        setSelectedMoodObj(null);
+        setStep("select");
+      }
     }
   };
 
@@ -69,23 +71,24 @@ export default function AddMood() {
             marginBottom: 20,
           }}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => setSelectedMoodObj(item)}
-              className={`items-center justify-center w-24 h-24 rounded-xl ${selectedMoodObj?.emoji === item.emoji ? "bg-blue-600" : "bg-neutral-800"
-                }`}
-            >
-              <Text className="text-3xl">{item.emoji}</Text>
-              <Text className="mt-1 text-xs text-white">{item.label}</Text>
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => {
+            const isSelected = selectedMoodObj?.emoji === item.emoji;
+            return (
+              <TouchableOpacity
+                onPress={() => setSelectedMoodObj(item)}
+                className={`items-center justify-center w-24 h-24 rounded-xl ${isSelected ? "bg-blue-600" : "bg-neutral-800"}`}
+              >
+                <Text className="text-3xl">{item.emoji}</Text>
+                <Text className="mt-1 text-xs text-white">{item.label}</Text>
+              </TouchableOpacity>
+            );
+          }}
         />
 
         <TouchableOpacity
           disabled={!selectedMoodObj}
           onPress={handleChoose}
-          className={`items-center py-4 mt-auto mb-8 rounded-full ${selectedMoodObj ? "bg-blue-600" : "bg-neutral-700"
-            }`}
+          className={`items-center py-4 mt-auto mb-8 rounded-full ${selectedMoodObj ? "bg-blue-600" : "bg-neutral-700"}`}
         >
           <Text className="text-lg font-semibold text-white">Choose</Text>
         </TouchableOpacity>
